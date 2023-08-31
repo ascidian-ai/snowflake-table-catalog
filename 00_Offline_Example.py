@@ -1,10 +1,14 @@
-#from turtle import onclick
 import streamlit as st
 import pandas as pd
 import io
 import requests
-#import streamlit.components.v1 as components
-st.set_page_config(layout="wide")
+from sfg_tss_lib.common import common
+from sfg_tss_lib.streamlit import helper_functions
+
+#########################################################################################
+sfg_st = helper_functions()
+sfg_st.page_config(css='css/style.css')
+#########################################################################################
 # Initialize connection.
 # Uses st.experimental_singleton to only run once.
 
@@ -19,6 +23,7 @@ df2 = df
 # if 'df' not in st.session_state:
 #    st.session_state.df = df
 
+st.image(image=common.logo_image, width=common.logo_size)
 st.title('Snowflake Table Catalog')
 
 def human_bytes(B):
