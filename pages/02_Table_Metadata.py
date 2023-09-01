@@ -170,7 +170,8 @@ if 'selectbox_database_key' not in st.session_state:
 
 # Table Catalog/Database
 fv_database = df['TABLE_CATALOG'].drop_duplicates()
-fv_database = fv_database.append(all_option)
+#fv_database = fv_database.append(all_option) # StevenTuften: Series.append deprecated, use pd.concat
+fv_database = pd.concat([fv_database,all_option], axis=0)
 
 selectbox_database = st.sidebar.selectbox(
     'Database', fv_database, index=len(fv_database)-1, key=st.session_state.selectbox_database_key)
@@ -182,7 +183,8 @@ else:
 
 # Table Schema
 fv_table_schema = df['TABLE_SCHEMA'].drop_duplicates()
-fv_table_schema = fv_table_schema.append(all_option)
+# fv_table_schema = fv_table_schema.append(all_option) # StevenTuften: Series.append deprecated, use pd.concat
+fv_table_schema = pd.concat([fv_table_schema,all_option], axis=0)
 
 selectbox_schema = st.sidebar.selectbox(
     "Table Schema", fv_table_schema, len(fv_table_schema)-1, key=st.session_state.selectbox_schema_key)
@@ -194,7 +196,9 @@ else:
 
 # Table Owner
 fv_owner = df['TABLE_OWNER'].drop_duplicates()
-fv_owner = fv_owner.append(all_option)
+#fv_owner = fv_owner.append(all_option)  # StevenTuften: Series.append deprecated, use pd.concat
+fv_owner = pd.concat([fv_owner,all_option], axis=0)
+
 selectbox_owner = st.sidebar.selectbox(
     "Table Owner", fv_owner, len(fv_owner)-1, key=st.session_state.selectbox_owner_key)
 
@@ -351,7 +355,8 @@ table_scorecard += """<br><br><br><div id="mydiv" class="ui centered cards">"""
 
 
 for index, row in df.iterrows():
-    table_scorecard += """
+#    table_scorecard += """
+    table_scorecard_card = """
 <div class="card"">   
     <div class=" content """+header_bg(row['TABLE_TYPE'])+"""">
             <div class=" header smallheader">"""+row['TABLE_NAME']+"""</div>
@@ -384,5 +389,10 @@ for index, row in df.iterrows():
         <div class="meta"><i class="comment alternate outline icon"></i> Comment: """+str(row['IS_TRANSIENT'])+""" </div>
     </div>
 </div>"""
+    st.markdown(table_scorecard_card, unsafe_allow_html=True)
 
-st.markdown(table_scorecard, unsafe_allow_html=True)
+# st.markdown(table_scorecard, unsafe_allow_html=True)
+#TODO: Add switch page function
+#TODO: Add Refresh catalog page
+#TODO: Seperate catalog read/init function into seperate python package
+#TODO: Fine tune markup display of cards
