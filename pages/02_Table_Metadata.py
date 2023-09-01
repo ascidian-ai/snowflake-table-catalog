@@ -1,8 +1,6 @@
 import streamlit as st
 import snowflake.connector
 import pandas as pd
-import io
-import requests
 from sfg_tss_lib.common import common
 from sfg_tss_lib.streamlit import helper_functions
 
@@ -12,8 +10,10 @@ sfg_st.page_config(css='css/style.css')
 #########################################################################################
 # Initialize connection.
 # Uses st.experimental_singleton to only run once.
+#@st.experimental_singleton
+# StevenTuften : replaced with st.cache_resource as st.experimental_singleton is deprecated!
 
-@st.experimental_singleton
+@st.cache_resource()
 def init_connection():
     return snowflake.connector.connect(**st.secrets["snowflake"])
 
@@ -23,8 +23,9 @@ cur = conn.cursor()
 
 # Perform query.
 # Uses st.experimental_memo to only rerun when the query changes or after 10 min.
-
-@st.experimental_memo(ttl=600)
+#@st.experimental_memo(ttl=600)
+# StevenTuften : replaced with st.cache_data as st.experimental_memo is deprecated!
+@st.cache_data()
 def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
