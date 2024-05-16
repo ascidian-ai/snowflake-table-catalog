@@ -174,7 +174,7 @@ fv_database = df['TABLE_CATALOG'].drop_duplicates()
 fv_database = pd.concat([fv_database,all_option], axis=0)
 
 selectbox_database = st.sidebar.selectbox(
-    'Database', fv_database, index=len(fv_database)-1, key=st.session_state.selectbox_database_key)
+    label='Database', options=fv_database, index=0, key=st.session_state.selectbox_database_key)
 
 if selectbox_database != 'All':
     df = df.loc[df['TABLE_CATALOG'] == selectbox_database]
@@ -187,7 +187,7 @@ fv_table_schema = df['TABLE_SCHEMA'].drop_duplicates()
 fv_table_schema = pd.concat([fv_table_schema,all_option], axis=0)
 
 selectbox_schema = st.sidebar.selectbox(
-    "Table Schema", fv_table_schema, len(fv_table_schema)-1, key=st.session_state.selectbox_schema_key)
+    label="Table Schema", options=fv_table_schema, index=0, key=st.session_state.selectbox_schema_key)
 
 if selectbox_schema != 'All':
     df = df.loc[df['TABLE_SCHEMA'] == selectbox_schema]
@@ -200,7 +200,7 @@ fv_owner = df['TABLE_OWNER'].drop_duplicates()
 fv_owner = pd.concat([fv_owner,all_option], axis=0)
 
 selectbox_owner = st.sidebar.selectbox(
-    "Table Owner", fv_owner, len(fv_owner)-1, key=st.session_state.selectbox_owner_key)
+    label="Table Owner", options=fv_owner, index=0, key=st.session_state.selectbox_owner_key)
 
 if selectbox_owner != 'All':
     df = df.loc[df['TABLE_OWNER'] == selectbox_owner]
@@ -210,7 +210,7 @@ else:
 # Table Type
 fv_table_type = df['TABLE_TYPE'].drop_duplicates()
 selectbox_table_type = st.sidebar.multiselect(
-    'Table Type', fv_table_type, fv_table_type, key=st.session_state.selectbox_table_type_key)
+    label='Table Type', options=fv_table_type, default=fv_table_type[0], key=st.session_state.selectbox_table_type_key)
 
 if len(selectbox_table_type) > 0:
     df = df.loc[df['TABLE_TYPE'].isin(selectbox_table_type)]
@@ -352,12 +352,11 @@ table_scorecard = """
 </div>"""
 
 table_scorecard += """<br><br><br><div id="mydiv" class="ui centered cards">"""
+st.markdown(table_scorecard, unsafe_allow_html=True)
 
-
+# iterate through each row and display the card for each
 for index, row in df.iterrows():
-#    table_scorecard += """
-    table_scorecard_card = """
-<div class="card"">   
+    table_scorecard_card = """<div class="card"">   
     <div class=" content """+header_bg(row['TABLE_TYPE'])+"""">
             <div class=" header smallheader">"""+row['TABLE_NAME']+"""</div>
     <div class="meta smallheader">"""+row['TABLE_CATALOG']+"."+row['TABLE_SCHEMA']+"""</div>
